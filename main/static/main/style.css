@@ -1,7 +1,15 @@
+body{
+  color: #1a2f54;
+}
 header h1 {
-background: url("bg.jpg") left / auto 100% no-repeat, 
-("bg.jpg") right / auto 100% no-repeat;
+	background: url("bg.jpg") left / auto 100% no-repeat, 
+	url("add_notice.jpg") right / auto 100% no-repeat;
+	margin-top: 10px;
 }
 .root {
 	font-size: larger;
+}
+.justify-content-end{
+	background-color: ff5816;
+	border-radius: 4px;
 }

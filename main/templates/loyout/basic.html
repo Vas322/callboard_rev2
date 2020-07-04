@@ -18,11 +18,12 @@
 		<h1 class="display-1 text-center">Объявления</h1>
 	</header>
 	<div class="row">
-		<ul class="col nav justify-content-end border">
-			<li class="nav-item"><a class="nav-link" href="#">Регистрация</a></li>
+		<ul class="col nav justify-content-end bg-primary border">
+			<li class="nav-item"><a class="nav-link text-white" 
+				href=" {% url 'main:register' %}">Регистрация</a></li>
 			{% if user.is_authenticated %}			
 			<li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle"
+				<a class="nav-link dropdown-toggle text-white"
 				data-toggle="dropdown" href="#"
 				role="button" aria-haspopup="true"
 				aria-expanded="false">Профиль</a>
@@ -37,7 +38,7 @@
 				</div>
 			</li>
 			{% else %}
-			<li class="nav-item"><a class="nav-link" 
+			<li class="nav-item"><a class="nav-link text-white" 
 				href=" {% url 'main:login' %} ">Вход</a></li>
 			{% endif %}			
 		</ul>
