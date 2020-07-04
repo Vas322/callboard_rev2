@@ -5,7 +5,7 @@
 {% block content %}
 	<h2>Профиль пользователя {{ user.username }}</h2>
 	{% if user.first_name and user.last_name %}
-		<p>Приветствуем, {{ user.first_name }} {{ user.last_name }}!</p>
+		<p>Приветствуем вас, {{ user.first_name }} {{ user.last_name }}!</p>
 	{% else %}
 		<p>Приветствуем!</p>
 	{% endif %}
