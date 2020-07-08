@@ -13,9 +13,11 @@ from django.views.generic.base import TemplateView
 from django.core.signing import BadSignature
 from django.contrib.auth import logout
 from django.contrib import messages
+from django.core.paginator import Paginator
+from django.db.models import Q
 
-from .models import AdvUser
-from .forms import ChangeUserInfoForm, RegisterUserForm
+from .models import AdvUser, Bb, SubRubric
+from .forms import ChangeUserInfoForm, RegisterUserForm, SearchForm
 from .utilities import signer
 
 
@@ -31,7 +33,9 @@ def other_page(request, page):
 # Create your views here.
 def index(request):
     """контроллер главной страницы"""
-    return render(request, 'main/index.html')
+    bbs = Bb.objects.filter(is_active=True)[:10]
+    context = {'bbs': bbs}
+    return render(request, 'main/index.html', context)
 
 
 class BBLoginView(LoginView):
@@ -130,4 +134,29 @@ class DeleteUserView(LoginRequiredMixin, DeleteView):
 
 def by_rubric(request, pk):
     """Контроллер вывода рубрик"""
-    pass
+    rubric = get_object_or_404(SubRubric, pk=pk)
+    bbs = Bb.objects.filter(is_active=True, rubric=pk)
+    if 'keyword' in request.GET:
+        keyword = request.GET['keyword']
+        q = Q(title__icontains=keyword) | Q(content__icontains=keyword)
+        bbs = bbs.filter(q)
+    else:
+        keyword = ''
+    form = SearchForm(initial={'keyword': keyword})
+    paginator = Paginator(bbs, 2)
+    if 'page' in request.GET:
+        page_num = request.GET['page']
+    else:
+        page_num = 1
+    page = paginator.get_page(page_num)
+    context = {'rubric': rubric, 'page': page, 'bbs': page.object_list,
+               'form': form}
+    return render(request, 'main/by_rubric.html', context)
+
+
+def detail(request, rubric_pk, pk):
+    """Детальные сведения, о выбранном объявлении"""
+    bb = get_object_or_404(Bb, pk=pk)
+    ais = bb.additionalimage_set.all()  # список дополнительных иллюстраций
+    context = {'bb': bb, 'ais': ais}
+    return render(request, 'main/detail.html', context)

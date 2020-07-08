@@ -13,3 +13,9 @@ header h1 {
 	background-color: ff5816;
 	border-radius: 4px;
 }
+img.main-image {
+	width: 300px;
+}
+img.additional-image{
+	width: 180px;
+}
