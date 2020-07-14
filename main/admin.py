@@ -2,7 +2,7 @@ from django.contrib import admin
 import datetime
 
 from .forms import SubRubricForm
-from .models import AdvUser, SuperRubric, SubRubric, Bb, AdditionalImage
+from .models import AdvUser, SuperRubric, SubRubric, Bb, AdditionalImage, Comment
 from .utilities import send_activation_notification
 
 
@@ -79,7 +79,13 @@ class BbAdmin(admin.ModelAdmin):
     inlines = (AdditionalInline,)
 
 
+class CommentAdmin(admin.ModelAdmin):
+    """Редактор для работы с комментариями"""
+    list_display = ('author', 'bb', 'content', 'is_active')
+
+
 admin.site.register(SubRubric, SubRubricAdmin)
 admin.site.register(SuperRubric, SuperRubricAdmin)
 admin.site.register(AdvUser, AdvUserAdmin)
 admin.site.register(Bb, BbAdmin)
+admin.site.register(Comment, CommentAdmin)

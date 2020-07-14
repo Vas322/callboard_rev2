@@ -2,8 +2,9 @@ from django import forms
 from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
 from django.forms import inlineformset_factory
+from captcha.fields import CaptchaField
 
-from .models import AdvUser, user_registrated, SuperRubric, SubRubric, AdditionalImage, Bb
+from .models import AdvUser, user_registrated, SuperRubric, SubRubric, AdditionalImage, Bb, Comment
 
 
 class ChangeUserInfoForm(forms.ModelForm):
@@ -83,3 +84,23 @@ class BbForm(forms.ModelForm):
 
 
 AIFormSet = inlineformset_factory(Bb, AdditionalImage, fields='__all__')
+
+
+class UserCommentForm(forms.ModelForm):
+    """Форма для создания комментария, авторизованными юзерами"""
+
+    class Meta:
+        model = Comment
+        exclude = ('is_active',)
+        widgets = {'bb': forms.HiddenInput}
+
+
+class GuestCommentForm(forms.ModelForm):
+    """Форма для создания комментария гостем"""
+    captcha = CaptchaField(label='Введите текст с картинки',
+                           error_messages={'invalid': 'Неверный текст'})
+
+    class Meta:
+        model = Comment
+        exclude = ('is_active',)  # убираем это поле, т.к. активировать может только админ
+        widgets = {'bb': forms.HiddenInput}

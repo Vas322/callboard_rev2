@@ -1,10 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.dispatch import Signal
-from .utilities import send_activation_notification, get_timestamp_path
+from .utilities import send_activation_notification, get_timestamp_path, send_new_comment_notification
+from django.db.models.signals import post_save
 
 
-# Create your models here.
 class Rubric(models.Model):
     """Модель рубрики(надрубрики)"""
     name = models.CharField(max_length=20, db_index=True, unique=True,
@@ -84,16 +84,6 @@ class AdvUser(AbstractUser):
         pass
 
 
-user_registrated = Signal(providing_args=['instance'])
-
-
-def user_registrated_dispatcher(sender, **kwargs):
-    send_activation_notification(kwargs['instance'])
-
-
-user_registrated.connect(user_registrated_dispatcher)
-
-
 class Bb(models.Model):
     """Модель объявления"""
     rubric = models.ForeignKey(SubRubric, on_delete=models.PROTECT,
@@ -132,3 +122,30 @@ class AdditionalImage(models.Model):
     class Meta:
         verbose_name_plural = 'Дополнительные иллюстрации'
         verbose_name = 'Дополнительная иллюстрация'
+
+
+class Comment(models.Model):
+    """Модель комментария"""
+    bb = models.ForeignKey(Bb, on_delete=models.CASCADE, verbose_name='Объявление')
+    author = models.CharField(max_length=30, verbose_name='Автор')
+    content = models.TextField(verbose_name='Содержание')
+    is_active = models.BooleanField(default=True, db_index=True, verbose_name='Публиковать комментарий?')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата публикации')
+
+    class Meta:
+        verbose_name_plural = 'Комментарии'
+        verbose_name = 'Комментарий'
+        ordering = ['-created_at']
+
+
+user_registrated = Signal(providing_args=['instance'])
+
+
+def user_registrated_dispatcher(sender, **kwargs):
+    send_activation_notification(kwargs['instance'])
+
+
+user_registrated.connect(user_registrated_dispatcher)
+
+
+
