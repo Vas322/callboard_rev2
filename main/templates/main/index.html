@@ -12,22 +12,13 @@
 {% block content %}
 {% if bbs %}
 <h2 class="text-center text-muted">Последние 10 объявлений</h2>
-<div class="container-fluid mb-2">
-	<div class="row">
-		<div class="col">&nbsp;</div>
-		<form class="col-md-auto form-inline">
-			{% bootstrap_form form show_label=False %}
-			{% bootstrap_button content='Искать' button_type='submit' %}
-		</form>
-	</div>
-</div>
 <ul class="list-unstyled">
 	{% for bb in bbs %}
 	<li class="media my-5 p-3 border">
 		{% url 'main:detail' rubric_pk=bb.rubric.pk pk=bb.pk as url %}
 		<a href="{{ url }}{{ all }}">
 			{% if bb.image %}
-			<div class="col-md-auto"><img src=" {{ bb.image.url }}"
+			<div class="col-md-auto border-right"><img src=" {{ bb.image.url }}"
 				class="main-image"></div>
 				{% else %}
 				<img class="mr-3" src=" {{ bb.image.url }}" class="main-image">
@@ -42,6 +33,6 @@
 		</li>
 		{% endfor %}
 	</ul>
-	{% bootstrap_pagination page url=keyword %}
+	
 	{% endif %}
 	{% endblock content %}

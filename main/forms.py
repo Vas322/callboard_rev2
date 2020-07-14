@@ -1,8 +1,9 @@
 from django import forms
 from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
+from django.forms import inlineformset_factory
 
-from .models import AdvUser, user_registrated, SuperRubric, SubRubric
+from .models import AdvUser, user_registrated, SuperRubric, SubRubric, AdditionalImage, Bb
 
 
 class ChangeUserInfoForm(forms.ModelForm):
@@ -70,3 +71,15 @@ class SubRubricForm(forms.ModelForm):
 class SearchForm(forms.Form):
     """Форма поиска"""
     keyword = forms.CharField(required=False, max_length=20, label='Что-то ищете?')
+
+
+class BbForm(forms.ModelForm):
+    """Форма для создания объявления"""
+
+    class Meta:
+        model = Bb
+        fields = '__all__'
+        widgets = {'author': forms.HiddenInput}  # Hiddeninput скрывает значение, т.к. автор заносится автоматом
+
+
+AIFormSet = inlineformset_factory(Bb, AdditionalImage, fields='__all__')
