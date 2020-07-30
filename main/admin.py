@@ -81,7 +81,13 @@ class BbAdmin(admin.ModelAdmin):
 
 class CommentAdmin(admin.ModelAdmin):
     """Редактор для работы с комментариями"""
-    list_display = ('author', 'bb', 'content', 'is_active')
+    list_display = ('author', 'content', 'created_at', 'is_active')
+    list_display_links = ('author', 'content')
+    list_filter = ('is_active',)
+    search_fields = ('author', 'content',)
+    date_hierarchy = 'created_at'
+    fields = ('author', 'content', 'is_active', 'created_at')
+    readonly_fields = ('created_at',)
 
 
 admin.site.register(SubRubric, SubRubricAdmin)

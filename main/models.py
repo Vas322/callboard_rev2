@@ -128,7 +128,7 @@ class Comment(models.Model):
     """Модель комментария"""
     bb = models.ForeignKey(Bb, on_delete=models.CASCADE, verbose_name='Объявление')
     author = models.CharField(max_length=30, verbose_name='Автор')
-    content = models.TextField(verbose_name='Содержание')
+    content = models.TextField(verbose_name='Текст комментария')
     is_active = models.BooleanField(default=True, db_index=True, verbose_name='Публиковать комментарий?')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата публикации')
 
@@ -146,6 +146,3 @@ def user_registrated_dispatcher(sender, **kwargs):
 
 
 user_registrated.connect(user_registrated_dispatcher)
-
-
-
